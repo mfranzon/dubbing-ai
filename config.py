@@ -1,0 +1,2 @@
+AUTH_TOKEN = ""
+API_KEY = ""
