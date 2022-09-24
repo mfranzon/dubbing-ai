@@ -1,7 +1,7 @@
 import re
 import requests
 import apiaudio 
-from config import API_KEY, AUTH_TOKEN
+from config import AUDIO_API_KEY, ASSEMBLY_AUTH_TOKEN
 
 
 ### VIDEO2SUBTITLE SECTION 
@@ -16,7 +16,7 @@ def read_file(filename, chunk_size=5242880):
             yield data
 
 def upload_file(filename):
-    headers = {'authorization': AUTH_TOKEN}
+    headers = {'authorization': ASSEMBLY_AUTH_TOKEN}
     response = requests.post('https://api.assemblyai.com/v2/upload',
                             headers=headers,
                             data=read_file(filename))
@@ -27,7 +27,7 @@ def upload_file(filename):
 def send_to_assembly(filename):
     transcript_endpoint = "https://api.assemblyai.com/v2/transcript"
     headers = {
-    "authorization": AUTH_TOKEN,
+    "authorization": ASSEMBLY_AUTH_TOKEN,
     "content-type": "application/json"
     }
     transcript_request = {
@@ -48,7 +48,7 @@ def send_to_assembly(filename):
 
 ### APIAUDIO FOR TEXT2SPEECH SECTION
 
-apiaudio.api_key = API_KEY
+apiaudio.api_key = AUDIO_API_KEY
 
 
 def is_time_stamp(l):
