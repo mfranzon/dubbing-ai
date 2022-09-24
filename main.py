@@ -22,7 +22,11 @@ def main(filename, speed, voice):
 
     subtitle = response_srt.text.split("\n")
     send_to_audio(subtitle, speed, voice)
+
+    with open(f"{filename}.srt", "w") as _file:
+        _file.write(response_srt.text)
     
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = "Welcome to Dubbing AI")
