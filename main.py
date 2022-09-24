@@ -33,4 +33,4 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
     
-    main(sys.filename, sys.speed, sys.voice)
+    main(args.filename, args.speed, args.voice)
