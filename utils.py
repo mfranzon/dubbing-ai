@@ -96,7 +96,7 @@ def clean_up(lines):
     return new_lines
 
 
-def send_to_audio(filename, speed=105):
+def send_to_audio(filename, speed=105, voice="liam"):
     
     script = apiaudio.Script.create(
     scriptText=(
@@ -108,7 +108,7 @@ def send_to_audio(filename, speed=105):
 
     r = apiaudio.Speech.create(
     scriptId=script.get("scriptId"), 
-    voice="liam",
+    voice=voice,
     speed=speed
         )
 

@@ -5,7 +5,7 @@ from time import sleep
 from utils import send_to_assembly, send_to_audio
 
 
-def main(filename, speed):
+def main(filename, speed, voice):
     print("Uploading the file ...")
     headers, sub_endpoint = send_to_assembly(filename)
 
@@ -21,7 +21,7 @@ def main(filename, speed):
     response_srt = requests.get(f"{sub_endpoint}/srt", headers=headers)
 
     subtitle = response_srt.text.split("\n")
-    send_to_audio(subtitle, speed)
+    send_to_audio(subtitle, speed, voice)
     
 
 if __name__ == '__main__':
@@ -29,6 +29,8 @@ if __name__ == '__main__':
     parser.add_argument("filename", help="video filename")
     parser.add_argument("--speed", type=int, help=("speed of the generated audio,"
                           "default is 105, which is the speed of a native speaker."))
+    parser.add_argument("--voice", help="you can choose different voice from api audio list, default liam")
+    
     args = parser.parse_args()
     
-    main(sys.filename, sys.speed)
+    main(sys.filename, sys.speed, sys.voice)
