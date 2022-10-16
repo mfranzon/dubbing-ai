@@ -1,6 +1,10 @@
 import re
 import requests
-import apiaudio 
+from pathlib import Path
+import apiaudio
+from moviepy.editor import VideoFileClip
+from moviepy.editor import AudioFileClip
+from moviepy.editor import CompositeAudioClip
 from config import AUDIO_API_KEY, ASSEMBLY_AUTH_TOKEN
 
 
@@ -96,14 +100,14 @@ def clean_up(lines):
     return new_lines
 
 
-def send_to_audio(filename, speed=105, voice="liam"):
+def dubbing(filename, subtitle, speed=105, voice="liam"):
     
     script = apiaudio.Script.create(
     scriptText=(
     f"""
-    <<soundSegment::intro>><<sectionName::first>> {clean_up(filename)[0]}
+    <<soundSegment::intro>><<sectionName::first>> {clean_up(subtitle)[0]}
     """), 
-    scriptName="workinprogress")
+    scriptName=f"{Path(filename).stem.split('.')[0]}")
     
 
     r = apiaudio.Speech.create(
@@ -117,5 +121,15 @@ def send_to_audio(filename, speed=105, voice="liam"):
         scriptId=script.get("scriptId"),
         )
     
-    file = apiaudio.Mastering.download(scriptId=script.get("scriptId"))
-    print(file)
+    audio_file = apiaudio.Mastering.download(scriptId=script.get("scriptId"))
+    print(audio_file)
+  
+### EDIT VIDEO ADDING THE NEW DUBBED FILE
+
+    videoclip = VideoFileClip(f"{filename}")
+    new_clip = videoclip.without_audio()
+    audioclip = AudioFileClip(f"{audio_file}")
+
+    new_audioclip = CompositeAudioClip([audioclip])
+    new_clip.audio = new_audioclip
+    new_clip.write_videofile(f"Dubbed_{Path(filename).stem.split('.')[0]}.mp4")
