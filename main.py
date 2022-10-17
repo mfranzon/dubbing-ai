@@ -30,7 +30,7 @@ def main(filename, speed, voice):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = "Welcome to Dubbing AI")
     parser.add_argument("filename", help="video filename")
-    parser.add_argument("--speed", type=int, default=105,help=("speed of the generated audio,",
+    parser.add_argument("--speed", type=int, default=105,help=("speed of the generated audio,"
                           "default is 105, which is the speed of a native speaker."))
     parser.add_argument("--voice", default='liam', help="you can choose different voice from api audio list, default liam")
     
