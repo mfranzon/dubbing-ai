@@ -22,12 +22,12 @@ def read_file(filename, chunk_size=5242880):
 def upload_file(filename, auth=ASSEMBLY_AUTH_TOKEN):
     headers = {'authorization': auth}
     if isinstance(filename, str):
-      print("non devo esser qui")
+      print(f'{filename} is passed')
       response = requests.post('https://api.assemblyai.com/v2/upload',
                               headers=headers,
                               data=read_file(filename))
     else:
-      print("SONO QUI")
+      print("Byte stream")
       response = requests.post('https://api.assemblyai.com/v2/upload',
                             headers=headers,
                             data=filename)
