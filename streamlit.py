@@ -22,11 +22,11 @@ p_name = st.text_input("Insert a name for this Project")
 uploaded_file = st.file_uploader("Choose a video")
 if uploaded_file is not None:
     bytes_data = uploaded_file.getvalue()
+    
+    with open(f'{uploaded_file.name}', 'rb') as wfile:
+      wfile.write(bytes_data)
 
-    #video_file = open(f"{uploaded_file.name}", "rb")
-    video_bytes = bytes_data #video_file.read()
-
-    st.video(video_bytes)
+    st.video(bytes_data)
 
 if st.button("Dubbing"):
     with st.spinner("Waiting for subtitle generation..."):
