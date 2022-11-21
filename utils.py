@@ -19,19 +19,28 @@ def read_file(filename, chunk_size=5242880):
                 break
             yield data
 
-def upload_file(filename):
-    headers = {'authorization': ASSEMBLY_AUTH_TOKEN}
-    response = requests.post('https://api.assemblyai.com/v2/upload',
+def upload_file(filename, auth=ASSEMBLY_AUTH_TOKEN):
+    headers = {'authorization': auth}
+    if isinstance(filename, str):
+      print("non devo esser qui")
+      response = requests.post('https://api.assemblyai.com/v2/upload',
+                              headers=headers,
+                              data=read_file(filename))
+    else:
+      print("SONO QUI")
+      response = requests.post('https://api.assemblyai.com/v2/upload',
                             headers=headers,
-                            data=read_file(filename))
+                            data=filename)
+    print(response.json())
     video_url = response.json()["upload_url"]
     return video_url
 
 
-def send_to_assembly(filename):
+
+def send_to_assembly(filename, auth=ASSEMBLY_AUTH_TOKEN):
     transcript_endpoint = "https://api.assemblyai.com/v2/transcript"
     headers = {
-    "authorization": ASSEMBLY_AUTH_TOKEN,
+    "authorization": auth,
     "content-type": "application/json"
     }
     transcript_request = {
@@ -51,9 +60,6 @@ def send_to_assembly(filename):
 
 
 ### APIAUDIO FOR TEXT2SPEECH SECTION
-
-apiaudio.api_key = AUDIO_API_KEY
-
 
 def is_time_stamp(l):
   if l[:2].isnumeric() and l[2] == ':':
@@ -100,15 +106,20 @@ def clean_up(lines):
     return new_lines
 
 
-def dubbing(filename, subtitle, speed=105, voice="liam"):
+def dubbing(p_name, subtitle, video_name,
+            speed=105, voice="liam", 
+            auth=AUDIO_API_KEY):
+    
+    apiaudio.api_key = auth
     
     script = apiaudio.Script.create(
     scriptText=(
     f"""
     <<soundSegment::intro>><<sectionName::first>> {clean_up(subtitle)[0]}
     """), 
-    scriptName=f"{Path(filename).stem.split('.')[0]}")
+    scriptName=f"{Path(p_name).stem.split('.')[0]}")
     
+    print(clean_up(subtitle))
 
     r = apiaudio.Speech.create(
     scriptId=script.get("scriptId"), 
@@ -126,10 +137,12 @@ def dubbing(filename, subtitle, speed=105, voice="liam"):
   
 ### EDIT VIDEO ADDING THE NEW DUBBED FILE
 
-    videoclip = VideoFileClip(f"{filename}")
+    videoclip = VideoFileClip(f"{video_name}")
     new_clip = videoclip.without_audio()
     audioclip = AudioFileClip(f"{audio_file}")
 
     new_audioclip = CompositeAudioClip([audioclip])
     new_clip.audio = new_audioclip
-    new_clip.write_videofile(f"Dubbed_{Path(filename).stem.split('.')[0]}.mp4")
+    final_video = f"Dubbed_{Path(video_name).stem.split('.')[0]}.mp4"
+    new_clip.write_videofile(final_video)
+    return final_video
