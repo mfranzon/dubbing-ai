@@ -1,4 +1,5 @@
 import re
+import sys
 import requests
 from pathlib import Path
 import apiaudio
@@ -25,6 +26,7 @@ def upload_file(filename, auth=ASSEMBLY_AUTH_TOKEN):
         raise ValueError("A token is required")
     headers = {"authorization": auth}
     if isinstance(filename, str):
+        sys.stdout.flush()
         print(f"{filename} is passed")
         response = requests.post(
             "https://api.assemblyai.com/v2/upload",
@@ -32,6 +34,7 @@ def upload_file(filename, auth=ASSEMBLY_AUTH_TOKEN):
             data=read_file(filename),
         )
     else:
+        sys.stdout.flush()
         print("Byte stream")
         response = requests.post(
             "https://api.assemblyai.com/v2/upload", headers=headers, data=filename
