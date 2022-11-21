@@ -1,6 +1,7 @@
 import re
 import sys
 import requests
+from zipfile import ZipFile
 from pathlib import Path
 import apiaudio
 from moviepy.editor import VideoFileClip
@@ -150,4 +151,12 @@ def dubbing(p_name, subtitle, video_name, speed=105, voice="liam", auth=AUDIO_AP
     new_clip.audio = new_audioclip
     final_video = f"Dubbed_{Path(video_name).stem.split('.')[0]}.mp4"
     new_clip.write_videofile(final_video)
-    return final_video
+    return final_video, audio_file
+
+
+def create_zip(p_name, srt_file, video_file, audio_file):
+    final_zip = ZipFile(f"{p_name}.zip", "w")
+    final_zip.write(srt_file)
+    final_zip.write(video_file)
+    final_zip.write(audio_file)
+    final_zip.close()

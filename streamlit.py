@@ -2,6 +2,7 @@ import requests
 from time import sleep
 from utils import send_to_assembly
 from utils import dubbing
+from utils import create_zip
 import streamlit as st
 
 with st.sidebar:
@@ -50,7 +51,7 @@ if st.button("Dubbing"):
         _file.write(response_srt.text)
 
     with st.spinner("Waiting for dubbing..."):
-        final_video = dubbing(
+        final_video, audio_file = dubbing(
             p_name,
             subtitle,
             uploaded_file.name,
@@ -64,5 +65,14 @@ if st.button("Dubbing"):
     st.success("Your video is ready!")
     st.video(video_bytes)
 
-    st.write("Click here to download the subtitle file")
-    st.download_button("Download subtitles .srt", response_srt.text)
+    create_zip(p_name, f'{p_name}.srt',
+                              final_video, audio_file)
+ 
+    st.write("Click here to download the generated files")
+    with open(f"{p_name}.zip", "rb") as fp:
+        btn = st.download_button(
+            label="Download ZIP",
+            data=fp,
+            file_name="mydubbedvideo.zip",
+            mime="application/zip"
+        )
