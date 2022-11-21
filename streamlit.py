@@ -23,7 +23,7 @@ uploaded_file = st.file_uploader("Choose a video")
 if uploaded_file is not None:
     bytes_data = uploaded_file.getvalue()
     
-    with open(f'{uploaded_file.name}', 'rb') as wfile:
+    with open(f'{uploaded_file.name}', 'wb') as wfile:
       wfile.write(bytes_data)
 
     st.video(bytes_data)
