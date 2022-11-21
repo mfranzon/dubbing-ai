@@ -21,6 +21,8 @@ def read_file(filename, chunk_size=5242880):
 
 
 def upload_file(filename, auth=ASSEMBLY_AUTH_TOKEN):
+    if auth is None:
+        raise ValueError("A token is required")
     headers = {"authorization": auth}
     if isinstance(filename, str):
         print(f"{filename} is passed")
@@ -40,6 +42,8 @@ def upload_file(filename, auth=ASSEMBLY_AUTH_TOKEN):
 
 
 def send_to_assembly(filename, auth=ASSEMBLY_AUTH_TOKEN):
+    if auth is None:
+        raise ValueError("A token is required")
     transcript_endpoint = "https://api.assemblyai.com/v2/transcript"
     headers = {"authorization": auth, "content-type": "application/json"}
     transcript_request = {"audio_url": upload_file(filename)}
@@ -107,7 +111,8 @@ def clean_up(lines):
 
 
 def dubbing(p_name, subtitle, video_name, speed=105, voice="liam", auth=AUDIO_API_KEY):
-
+    if auth is None:
+        raise ValueError("A token is required")
     apiaudio.api_key = auth
 
     script = apiaudio.Script.create(
