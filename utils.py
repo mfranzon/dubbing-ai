@@ -49,7 +49,7 @@ def send_to_assembly(filename, auth=ASSEMBLY_AUTH_TOKEN):
         raise ValueError("A token is required")
     transcript_endpoint = "https://api.assemblyai.com/v2/transcript"
     headers = {"authorization": auth, "content-type": "application/json"}
-    transcript_request = {"audio_url": upload_file(filename)}
+    transcript_request = {"audio_url": upload_file(filename, auth=auth)}
 
     transcript_response = requests.post(
         transcript_endpoint, json=transcript_request, headers=headers
