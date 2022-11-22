@@ -30,6 +30,9 @@ if uploaded_file is not None:
     st.video(bytes_data)
 
 if st.button("Dubbing"):
+    if not tk_assembly or not tk_api_audio :
+        st.error('Both Tokens must be provided')
+        st.stop()
     with st.spinner("Waiting for subtitle generation..."):
         headers, sub_endpoint = send_to_assembly(bytes_data, auth=tk_assembly)
         polling_response = requests.get(sub_endpoint, headers=headers)
