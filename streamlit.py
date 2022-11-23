@@ -8,7 +8,7 @@ import streamlit as st
 with st.sidebar:
     tk_assembly = st.text_input("TOKEN ASSEMBLY AI", type="password")
     tk_api_audio = st.text_input("TOKEN API AUDIO", type="password")
-    speed = st.slider("Select the voice speed", 0, 130, 25)
+    speed = st.slider("Select the voice speed", 50, 120, 80)
     voice = st.selectbox("Which voice you want?", ("liam", "sonia", "aria", "ryan"))
 
 
